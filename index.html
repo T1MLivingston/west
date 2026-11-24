@@ -728,6 +728,23 @@ aside{display:flex;flex-direction:column;height:calc(100vh - var(--hh,80px));min
 .more[open] .ctrl2{display:grid;gap:10px;margin-top:6px}
 .imp{margin:12px 16px 0;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--yew2);font-size:14px}
 .imp h3{margin:0 0 4px;font-size:16px}.imp ul{margin:6px 0 0;padding-left:18px;max-height:140px;overflow:auto}.imp p{margin:4px 0}
+.star{color:#c98f0a}
+.sub{font:700 18px "Source Sans 3",sans-serif;margin:4px 0 8px}
+.jobs{border:1px solid var(--line);border-radius:10px;padding:12px;margin:0 0 14px;background:var(--card)}
+.jl{display:grid;gap:10px;margin-bottom:10px}.jl li{border-bottom:1px solid var(--line);padding-bottom:10px;font-size:14px}
+.jh{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.jh .ic{margin-left:auto;width:30px;height:30px;font-size:13px}
+.ph{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.thumb{width:64px;height:64px;padding:0;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--yew2);cursor:pointer}.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.jadd summary{list-style:none;width:max-content}.jadd summary::-webkit-details-marker{display:none}
+.jform{display:grid;gap:8px;margin-top:10px}
+.lb{position:fixed;inset:0;z-index:2000;background:#000d;display:flex;align-items:center;justify-content:center;padding:16px;cursor:zoom-out}.lb img{max-width:100%;max-height:100%;border-radius:6px}
+.print{display:none}
+@media print{body{background:#fff!important;color:#000!important}body>*:not(#print){display:none!important}
+ .print{display:block;font:11pt/1.4 "Source Sans 3",sans-serif;color:#000}
+ .print h1{font-size:20pt;margin:0 0 4px}.print h2{font:700 14pt "Source Sans 3",sans-serif;margin:0 0 2px}
+ .print .ps{margin:0 0 6px;color:#333}.print .pst{break-inside:avoid;border-top:1.5px solid #000;padding:8px 0 6px}
+ .print p{margin:2px 0}.print .dir{columns:2;column-gap:24px;font-size:9.5pt;margin:4px 0 6px;padding-left:18px;color:#222}.print .dir span{color:#666}
+ .print .wln{border-bottom:1px solid #999;height:22px}.print .lbl2{font-size:9pt;color:#555;text-transform:uppercase;letter-spacing:.04em;margin-top:4px}}
 .kv{width:100%;margin:0 0 12px;font-size:14px}.kv td{padding:4px}.kv td:first-child{color:var(--mute);white-space:nowrap;width:1%}
 .tabs{display:flex;border-bottom:1px solid var(--line);background:var(--card)}
 .tabs button{flex:1;min-height:48px;border:0;border-bottom:3px solid transparent;background:none;color:var(--mute);font:600 15px "Source Sans 3",sans-serif;cursor:pointer}
@@ -737,7 +754,8 @@ aside{display:flex;flex-direction:column;height:calc(100vh - var(--hh,80px));min
 .scrollp{overflow-y:auto;flex:1}
 .pad{padding:16px}
 .ctrl{padding:14px 16px;border-bottom:1px solid var(--line);display:grid;gap:10px}
-input[type=search],select,input[type=number],input[type=date],input[type=text]{width:100%;min-height:44px;font:16px "Source Sans 3",sans-serif;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
+textarea{min-height:64px!important;padding:10px 12px!important;resize:vertical;line-height:1.4}
+input[type=search],select,input[type=number],input[type=date],input[type=text],textarea{width:100%;min-height:44px;font:16px "Source Sans 3",sans-serif;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .row label{font-size:14px;color:var(--mute)}
 input[type=range]{flex:1;accent-color:var(--yew);min-height:40px}
@@ -801,7 +819,7 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 <header class="top">
   <div>
     <h1>Cemetery Tracker</h1>
-    <p>Find them, plan a loop, log the miles. Distances from Perry, NY.</p>
+    <p>Plan the day, log the stones. Every trip starts and ends in Perry, NY.</p>
   </div>
   <div class="stats" id="stats"></div>
 </header>
@@ -831,13 +849,12 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
     <div class="tabs" role="tablist">
       <button role="tab" data-tab="explore" aria-selected="true">Explore</button>
       <button role="tab" data-tab="details" aria-selected="false">Details</button>
-      <button role="tab" data-tab="route" aria-selected="false">Route <span class="n" id="rn">0</span></button>
-      <button role="tab" data-tab="log" aria-selected="false">Mileage</button>
+      <button role="tab" data-tab="route" aria-selected="false">Today <span class="n" id="rn">0</span></button>
     </div>
     <section class="pane on" id="p-explore">
       <div class="ctrl">
         <input type="search" id="q" placeholder="Search name, county or USGS map" aria-label="Search cemeteries">
-        <select id="show" aria-label="Which cemeteries"><option value="all">All cemeteries</option><option value="mine">My list (going + visited)</option><option value="plan">Going to</option><option value="v">Visited</option><option value="todo">Not visited yet</option></select>
+        <div class="row"><select id="show" aria-label="Which cemeteries" style="width:auto;flex:1 1 180px"><option value="all">All cemeteries</option><option value="mine">My list (going + visited)</option><option value="plan">Going to</option><option value="fav">★ Favorites</option><option value="most">Most visited</option><option value="v">Visited</option><option value="todo">Not visited yet</option></select><select id="client" aria-label="Client" style="width:auto;flex:1 1 150px" hidden></select></div>
         <details class="more"><summary>More filters</summary><div class="ctrl2">
           <div class="row"><label for="r">Within</label><input type="range" id="r" min="5" max="100" step="5" value="100"><span class="rad" id="rv">100 mi</span></div>
           <div><p class="lab">Estimated size</p><div class="row" id="sizes"><button class="chip" data-sz="all" aria-pressed="true">All</button><button class="chip" data-sz="S" aria-pressed="false">Small</button><button class="chip" data-sz="M" aria-pressed="false">Medium</button><button class="chip" data-sz="L" aria-pressed="false">Large</button></div></div>
@@ -851,10 +868,11 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
     </section>
     <section class="pane" id="p-details"><div class="scrollp pad" id="card"><p class="empty">Pick a cemetery on the map or in the list.</p></div></section>
     <section class="pane" id="p-route"><div class="scrollp pad" id="routeBox"></div></section>
-    <section class="pane" id="p-log"><div class="scrollp pad" id="logBox"></div></section>
   </aside>
 </div>
-<p class="foot">Cemetery locations: USGS Geographic Names Information System, NY and PA (2012). Size is an estimate from the cemetery's name and nearby town population, not a grave count. Highways: Natural Earth. Road miles: OSRM. Weather: Open-Meteo. Map tiles: CARTO and Esri. Ontario cemeteries are not included. Your route, visits, uploaded list and mileage log are saved in this browser only.</p>
+<div class="print" id="print"></div>
+<datalist id="clientList"></datalist>
+<p class="foot">Cemetery locations: USGS Geographic Names Information System, NY and PA (2012). Size is an estimate from the cemetery's name and nearby town population, not a grave count. Highways: Natural Earth. Road miles and directions: OSRM. Weather: Open-Meteo. Map tiles: CARTO and Esri. Ontario cemeteries are not included. Your trips, visits, favorites, job log and photos are saved in this browser only, on this device.</p>
 
 <script>/* @preserve
  * Leaflet 1.9.4, a JS library for interactive maps. https://leafletjs.com
@@ -889,15 +907,35 @@ const ST_NAME={NY:"New York",PA:"Pennsylvania"},stName=s=>ST_NAME[s]||s;
 let custom=load("ctCustom",[]);custom.forEach(c=>{C.push(c);byId.set(c.id,c)});
 let planned=new Set(load("ctPlanned",[]));
 let info=load("ctInfo",{});
+let favs=new Set(load("ctFav",[]));
+let jobs=load("ctJobs",{});
+const saveJobs=()=>save("ctJobs",jobs);
+let VC=new Map();
+const hm=m=>m>=60?`${Math.floor(m/60)}h ${Math.round(m%60)}m`:`${Math.round(m)}m`;
+const clientsOf=id=>{const a=[];if(info[id]?.client)a.push(info[id].client.toLowerCase());(jobs[id]||[]).forEach(j=>{if(j.client)a.push(j.client.toLowerCase())});return a};
+function visitCounts(){const m=new Map(),add=(id,d)=>{if(!d)return;if(!m.has(id))m.set(id,new Set());m.get(id).add(d)};
+  trips.forEach(t=>(t.ids||[]).forEach(id=>add(id,t.date)));
+  Object.entries(jobs).forEach(([id,J])=>J.forEach(j=>add(id,j.date)));
+  Object.entries(info).forEach(([id,I])=>{if(visited.has(id)&&I.date)add(id,I.date)});
+  const r=new Map();m.forEach((x,id)=>r.set(id,x.size));visited.forEach(id=>{if(!r.has(id))r.set(id,1)});return r}
+/* photos live in IndexedDB (too big for localStorage) */
+const idb=(()=>{let P;const open=()=>P||(P=new Promise((res,rej)=>{const r=indexedDB.open("ctPhotos",1);r.onupgradeneeded=()=>r.result.createObjectStore("p");r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}));
+  const tx=(m,f)=>open().then(db=>new Promise((res,rej)=>{const t=db.transaction("p",m),q=f(t.objectStore("p"));t.oncomplete=()=>res(q.result);t.onerror=()=>rej(t.error)}));
+  return{put:(k,v)=>tx("readwrite",x=>x.put(v,k)),get:k=>tx("readonly",x=>x.get(k)),del:k=>tx("readwrite",x=>x.delete(k))}})();
+async function shrink(file){const u=URL.createObjectURL(file);
+  try{const img=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=u});
+    const k=Math.min(1,1600/Math.max(img.naturalWidth,img.naturalHeight)),cv=document.createElement("canvas");cv.width=Math.round(img.naturalWidth*k);cv.height=Math.round(img.naturalHeight*k);
+    cv.getContext("2d").drawImage(img,0,0,cv.width,cv.height);return await new Promise(r=>cv.toBlob(r,"image/jpeg",.82))}finally{URL.revokeObjectURL(u)}}
+function lightbox(src){const d=document.createElement("div");d.className="lb";d.innerHTML=`<img alt="Job photo">`;d.firstChild.src=src;d.onclick=()=>d.remove();document.body.appendChild(d)}
 let visited=new Set(load("pv2Visited",[]));
 let route=load("pv2Route",[]).filter(id=>byId.has(id));
-let roundtrip=load("pv2Round",true);
+const roundtrip=true;
 let trips=load("pv2Log",[]);
 const LIM=innerWidth<900?40:150;
 let sel=null,limit=LIM,view="k",routeInfo=null;
 const PREF=Object.assign({base:"clean",roads:false,rings:false,towns:false,legend:false,NY:true,PA:false,theme:"auto",accent:"yew"},load("ctPrefs",{}));
 const savePrefs=()=>save("ctPrefs",PREF);
-const st={q:"",r:100,NY:PREF.NY,PA:PREF.PA,show:"all",county:"",size:"all"};
+const st={q:"",r:100,NY:PREF.NY,PA:PREF.PA,show:"all",county:"",size:"all",client:""};
 
 /* look: theme + accent colour */
 const ACC={yew:["Yew green","#2f4a3f","#2a4238","#e7eee9","#16201c","#2f4a3f","#a9c7b8"],
@@ -927,7 +965,7 @@ map.attributionControl.setPrefix(false);
 ["land","roadsP","ringsP","dotsP","topP"].forEach((n,i)=>{map.createPane(n).style.zIndex=[250,300,350,450,620][i]});
 map.getPane("ringsP").style.pointerEvents="none";
 const rend=L.canvas({padding:.5,pane:"dotsP"}),landR=L.canvas({padding:.5,pane:"land"}),roadR=L.canvas({padding:.5,pane:"roadsP"});
-const dLa=100/69.09,dLo=100/(69.17*Math.cos(HOME[0]*Math.PI/180));
+const dLa=60/69.09,dLo=60/(69.17*Math.cos(HOME[0]*Math.PI/180));
 function fitHome(){map.fitBounds([[HOME[0]-dLa,HOME[1]-dLo],[HOME[0]+dLa,HOME[1]+dLo]],{padding:[10,10]})}
 const ll=r=>r.map(p=>[p[1],p[0]]);
 const landG=L.layerGroup(),roadG=L.layerGroup(),shieldG=L.layerGroup(),ringG=L.layerGroup(),cityG=L.layerGroup(),dotG=L.layerGroup().addTo(map),routeG=L.layerGroup().addTo(map);
@@ -941,7 +979,7 @@ function buildBase(){
   ROADS.forEach(([k,lab,pts])=>{roadL.push(L.polyline(pts,{renderer:roadR,interactive:false,color:P["r"+k],weight:[3,2.2,1.3][k],opacity:.9,k}).addTo(roadG));
     if(lab&&!lab.startsWith("Hwy")&&pts.length>1){const len=pts.length;if(!best[lab]||len>best[lab].len)best[lab]={len,pt:pts[Math.floor(len/2)],k}}});
   Object.entries(best).forEach(([lab,v])=>L.marker(v.pt,{pane:"ringsP",interactive:false,icon:L.divIcon({className:"",html:`<span class="shield k${v.k}">${esc(lab)}</span>`,iconSize:null}),k:v.k}).addTo(shieldG));
-  [25,50,75,100].forEach(mi=>{ringL.push(L.circle(HOME,{radius:mi*1609.34,pane:"ringsP",renderer:L.svg({pane:"ringsP"}),interactive:false,fill:false,color:P.ring,weight:1.2,opacity:.55,dashArray:"5 5"}).addTo(ringG));
+  [20,40,60].forEach(mi=>{ringL.push(L.circle(HOME,{radius:mi*1609.34,pane:"ringsP",renderer:L.svg({pane:"ringsP"}),interactive:false,fill:false,color:P.ring,weight:1.2,opacity:.55,dashArray:"5 5"}).addTo(ringG));
     L.marker([HOME[0]+mi/69.09,HOME[1]],{pane:"ringsP",interactive:false,icon:L.divIcon({className:"",html:`<span class="lbl ring">${mi} mi</span>`,iconSize:null,iconAnchor:[14,16]})}).addTo(ringG)});
   CITIES.filter(c=>c[0]!=="Perry").forEach(c=>L.marker([c[1],c[2]],{pane:"ringsP",interactive:false,icon:L.divIcon({className:"",html:`<span class="lbl">• ${esc(c[0])}</span>`,iconSize:null,iconAnchor:[3,8]})}).addTo(cityG));
   L.marker(HOME,{pane:"topP",icon:L.divIcon({className:"",html:'<div class="homepin"></div>',iconSize:[18,18],iconAnchor:[9,9]}),keyboard:false}).bindTooltip("Perry, NY 14530").addTo(map);
@@ -986,30 +1024,32 @@ shields();
 
 /* filters + dots */
 function filtered(){const q=st.q.trim().toLowerCase();
-  const okShow=c=>{const v=visited.has(c.id),p=planned.has(c.id);return st.show==="all"||(st.show==="v"&&v)||(st.show==="todo"&&!v)||(st.show==="plan"&&p)||(st.show==="mine"&&(v||p))};
-  return C.filter(c=>(c.d<=st.r||(c.custom&&st.r>=100))&&(st[c.s]??true)&&(st.size==="all"||c.z===st.size)&&(!st.county||c.s+"|"+c.co===st.county)&&okShow(c)&&(!q||(c.n+" "+c.co+" "+c.quad+" "+(info[c.id]?.note||"")).toLowerCase().includes(q)))}
+  VC=visitCounts();const cl=st.client;
+  const okShow=c=>{const v=visited.has(c.id),p=planned.has(c.id);return st.show==="all"||(st.show==="v"&&v)||(st.show==="todo"&&!v)||(st.show==="plan"&&p)||(st.show==="mine"&&(v||p))||(st.show==="fav"&&favs.has(c.id))||(st.show==="most"&&(VC.get(c.id)||0)>0)};
+  const out=C.filter(c=>(c.d<=st.r||(c.custom&&st.r>=100))&&(st[c.s]??true)&&(st.size==="all"||c.z===st.size)&&(!st.county||c.s+"|"+c.co===st.county)&&okShow(c)&&(!q||(c.n+" "+c.co+" "+c.quad+" "+(info[c.id]?.note||"")+" "+clientsOf(c.id).join(" ")).toLowerCase().includes(q))&&(!cl||clientsOf(c.id).includes(cl)));
+  return out.sort((a,b)=>st.show==="most"?((VC.get(b.id)||0)-(VC.get(a.id)||0))||a.d-b.d:a.d-b.d)}
 const markers=new Map();
 const zf=()=>{const z=map.getZoom();return z<=6?.45:z<=7?.6:z<=8?.75:z<=9?.9:1};
 function renderDots(){
   const P=PAL(),f=filtered();dotG.clearLayers();
   f.forEach(c=>{let m=markers.get(c.id);
     if(!m){m=L.circleMarker([c.la,c.lo],{renderer:rend,bubblingMouseEvents:false});m.on("click",()=>pick(c,false));m.bindTooltip(()=>`${esc(c.n)} · ${c.d.toFixed(1)} mi`,{direction:"top",offset:[0,-4]});markers.set(c.id,m)}
-    const v=visited.has(c.id),p=planned.has(c.id),s=c===sel;
-    m.setStyle({radius:(RAD[c.z]||5)*zf()+(s?3:0)+(p&&!v?1:0),color:s?"#17201d":P.dotS,weight:s?2.5:1,fillColor:v||s?"#e0a526":p?(isDark()?"#6ea0ff":"#2563eb"):P.dot,fillOpacity:v||s||p?1:.8});m.addTo(dotG)});
+    const v=visited.has(c.id),p=planned.has(c.id),s=c===sel,fv=favs.has(c.id);
+    m.setStyle({radius:(RAD[c.z]||5)*zf()+(s?3:0)+(p&&!v?1:0)+(fv?1:0),color:s?"#17201d":fv?(isDark()?"#ffffff":"#17201d"):P.dotS,weight:s?2.5:fv?2:1,fillColor:v||s?"#e0a526":p?(isDark()?"#6ea0ff":"#2563eb"):P.dot,fillOpacity:v||s||p?1:.8});m.addTo(dotG)});
   if(sel&&markers.get(sel.id)&&dotG.hasLayer(markers.get(sel.id)))markers.get(sel.id).bringToFront();
   return f}
 function renderList(){
   const f=renderDots();
   $("cnt").textContent=`${f.length.toLocaleString()} shown · ${f.filter(c=>visited.has(c.id)).length} visited`;
-  $("list").innerHTML=f.slice(0,limit).map(c=>{const inR=route.includes(c.id);return `<li class="li${c===sel?" sel":""}"><button class="main" data-id="${esc(c.id)}"><span class="n">${esc(c.n)}</span><span class="d">${c.d.toFixed(1)} mi</span><span class="s"><span class="sz">${c.custom?"Yours":SZ[c.z]}</span>${c.co?esc(c.co)+" Co., ":""}${esc(c.s)} · ${dir(c.b)}${visited.has(c.id)?" · <i>Visited</i>":planned.has(c.id)?' · <i class="g">Going</i>':""}</span></button><button class="add${inR?" on":""}" data-add="${esc(c.id)}" aria-label="${inR?"Remove from":"Add to"} route" title="${inR?"In route":"Add to route"}">${inR?"✓":"+"}</button></li>`}).join("")
+  $("list").innerHTML=f.slice(0,limit).map(c=>{const inR=route.includes(c.id);return `<li class="li${c===sel?" sel":""}"><button class="main" data-id="${esc(c.id)}"><span class="n">${favs.has(c.id)?'<span class="star" aria-label="Favorite">★</span> ':""}${esc(c.n)}</span><span class="d">${c.d.toFixed(1)} mi</span><span class="s"><span class="sz">${c.custom?"Yours":SZ[c.z]}</span>${c.co?esc(c.co)+" Co., ":""}${esc(c.s)} · ${dir(c.b)}${visited.has(c.id)?" · <i>Visited</i>":planned.has(c.id)?' · <i class="g">Going</i>':""}${(VC.get(c.id)||0)>1?` · ${VC.get(c.id)} visits`:""}${(jobs[c.id]||[]).length?` · ${jobs[c.id].length} job${jobs[c.id].length>1?"s":""}`:""}</span></button><button class="add${inR?" on":""}" data-add="${esc(c.id)}" aria-label="${inR?"Remove from":"Add to"} route" title="${inR?"In route":"Add to route"}">${inR?"✓":"+"}</button></li>`}).join("")
     +(f.length>limit?`<li style="padding:12px 16px"><button class="btn" id="more">Show ${Math.min(LIM,f.length-limit)} more</button></li>`:"")
     +(f.length?"":`<li><p class="empty pad">No cemeteries match. Widen the radius or clear a filter.</p></li>`);
 }
-function stats(){const miles=trips.reduce((s,t)=>s+(+t.miles||0),0);
-  $("stats").innerHTML=`<div><b>${planned.size}</b>going</div><div><b>${visited.size}</b>visited</div><div><b>${Math.round(miles).toLocaleString()}</b>miles logged</div><div class="wx-now" id="wxTop"><b>…</b>Perry weather</div>`;
+function stats(){
+  $("stats").innerHTML=`<div><b>${planned.size}</b>going</div><div><b>${visited.size}</b>visited</div><div><b>${favs.size}</b>favorites</div><div><b>${Object.values(jobs).reduce((n,J)=>n+J.length,0)}</b>jobs</div><div class="wx-now" id="wxTop"><b>…</b>Perry weather</div>`;
   wxNow()}
 function tab(t){document.querySelectorAll("[data-tab]").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===t));document.querySelectorAll(".pane").forEach(p=>p.classList.toggle("on",p.id==="p-"+t));
-  if(t==="route")renderRoute();if(t==="log")renderLog()}
+  if(t==="route")renderRoute()}
 document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>tab(b.dataset.tab));
 
 /* weather */
@@ -1034,12 +1074,13 @@ function urls(c){const stN=stName(c.s);return{
   dirs:`https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(HOMEQ)}&destination=${c.la},${c.lo}`}}
 function card(){const c=sel;if(!c){$("card").innerHTML=`<p class="empty">Pick a cemetery on the map or in the list.</p>`;return}
   const U=urls(c),v=visited.has(c.id),p=planned.has(c.id),inR=route.includes(c.id),I=info[c.id];
-  const kv=I?[["Date",I.date],["Notes",I.note],...Object.entries(I.extra||{})].filter(x=>x[1]):[];
+  const kv=I?[["Client",I.client],["Date",I.date],["Notes",I.note],...Object.entries(I.extra||{})].filter(x=>x[1]):[];
   const src=view==="fg"?U.fg:U.emb(view);
   $("card").innerHTML=`<h2>${esc(c.n)}</h2><div class="meta">${c.co?esc(c.co)+" County, ":""}${esc(stName(c.s))}${c.quad?" · USGS "+esc(c.quad)+" map":""}${c.custom?" · added from your CSV":""}</div>
   <div class="facts"><div><b>${c.d.toFixed(1)} mi</b>straight line</div><div><b>${dir(c.b)} ${c.b}°</b>from Perry</div><div><b>${SZ[c.z]||"n/a"}</b>est. size</div><div><b>${c.el?Number(c.el).toLocaleString()+" ft":"n/a"}</b>elevation</div></div>
-  <div class="links"><button class="btn ${inR?"gold":"pri"}" id="addR">${inR?"✓ In route":"+ Add to route"}</button><button class="btn${p?" pri":""}" id="go">${p?"✓ Going":"Mark going"}</button><button class="btn${v?" gold":""}" id="vis">${v?"✓ Visited":"Mark visited"}</button></div>
+  <div class="links"><button class="btn ${inR?"gold":"pri"}" id="addR">${inR?"✓ On today's trip":"+ Add to today"}</button><button class="btn${p?" pri":""}" id="go">${p?"✓ Going":"Mark going"}</button><button class="btn${v?" gold":""}" id="vis">${v?"✓ Visited":"Mark visited"}</button><button class="btn" id="fav" aria-pressed="${favs.has(c.id)}">${favs.has(c.id)?'<span class="star">★</span> Favorite':"☆ Favorite"}</button></div>
   ${kv.length?`<table class="kv"><tbody>${kv.map(([k,x])=>`<tr><td>${esc(k)}</td><td>${esc(x)}</td></tr>`).join("")}</tbody></table>`:""}
+  ${jobsHTML(c)}
   <div class="row" role="group" aria-label="Viewer">${[["k","Satellite"],["h","Labels"],["m","Map"],["fg","Find a Grave"]].map(([k,t])=>`<button class="chip" data-v="${k}" aria-pressed="${view===k}">${t}</button>`).join("")}</div>
   <div class="frame"><iframe id="gframe" title="${view==="fg"?"Find a Grave":"Google map"} for ${esc(c.n)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="${src}"></iframe></div>
   <p class="note">${view==="fg"?"Blank box? Find a Grave may block embedding. Use the Find a Grave button below to open it.":"Drag and zoom inside the view. Needs internet."}</p>
@@ -1048,15 +1089,44 @@ function card(){const c=sel;if(!c){$("card").innerHTML=`<p class="empty">Pick a 
   $("card").querySelectorAll("[data-v]").forEach(b=>b.onclick=()=>{view=b.dataset.v;card()});
   $("vis").onclick=()=>{if(v)visited.delete(c.id);else{visited.add(c.id);planned.delete(c.id)}saveMine();card();renderList();stats()};
   $("go").onclick=()=>{p?planned.delete(c.id):planned.add(c.id);saveMine();card();renderList();stats()};
+  $("fav").onclick=()=>{favs.has(c.id)?favs.delete(c.id):favs.add(c.id);saveMine();card();renderList();stats()};
+  bindJobs(c);
   $("addR").onclick=()=>toggleRoute(c.id);
   wxBox(c)}
+function jobsHTML(c){const J=jobs[c.id]||[];
+  return `<div class="jobs"><h3 class="sub">Job log${J.length?` (${J.length})`:""}</h3>
+  ${J.length?`<ul class="jl" style="list-style:none;padding:0;margin-top:0">${J.map(j=>`<li><div class="jh"><b>${esc(j.date)}</b>${j.client?" · "+esc(j.client):""}${j.count?` · ${j.count} stone${j.count==1?"":"s"}`:""}<button class="ic" data-jdel="${j.id}" aria-label="Delete job">✕</button></div>${j.stones?`<div>${esc(j.stones)}</div>`:""}${j.notes?`<div class="note" style="margin:0">${esc(j.notes)}</div>`:""}${j.photos?.length?`<div class="ph">${j.photos.map(k=>`<button class="thumb" data-ph="${esc(k)}" aria-label="Open photo"><img alt=""></button>`).join("")}</div>`:""}</li>`).join("")}</ul>`:`<p class="note">No jobs logged here yet.</p>`}
+  <details class="jadd"><summary class="btn sm pri">+ Log a job</summary><div class="jform">
+    <div class="row"><input type="date" id="jDate" value="${today()}" aria-label="Date" style="width:auto;flex:1"><input type="number" id="jCount" min="0" step="1" placeholder="# stones" aria-label="Number of stones" style="width:110px"></div>
+    <input type="text" id="jClient" list="clientList" placeholder="Who it was for (client or family)" aria-label="Client">
+    <textarea id="jStones" rows="2" placeholder="Stones done, e.g. John Smith 1820–1881; Mary Smith" aria-label="Stones done"></textarea>
+    <textarea id="jNotes" rows="2" placeholder="Notes" aria-label="Notes"></textarea>
+    <div class="row"><label class="btn sm">📷 Add photos<input type="file" id="jPh" accept="image/*" multiple hidden></label><span class="note" id="jPhN" style="margin:0"></span></div>
+    <button class="btn pri" id="jSave">Save job</button></div></details></div>`}
+function bindJobs(c){const box=$("card");
+  box.querySelectorAll("[data-jdel]").forEach(x=>x.onclick=async()=>{if(!confirm("Delete this job and its photos?"))return;
+    const J=jobs[c.id]||[],i=J.findIndex(j=>String(j.id)===x.dataset.jdel);if(i<0)return;const g=J.splice(i,1)[0];
+    for(const k of g.photos||[])try{await idb.del(k)}catch(e){}
+    if(!J.length)delete jobs[c.id];saveJobs();buildClients();card();renderList();stats()});
+  box.querySelectorAll("[data-ph]").forEach(async x=>{try{const bl=await idb.get(x.dataset.ph);if(!bl)return;const u=URL.createObjectURL(bl);x.querySelector("img").src=u;x.onclick=()=>lightbox(u)}catch(e){}});
+  const ph=$("jPh");ph.onchange=()=>{const n=ph.files.length;$("jPhN").textContent=n?`${n} photo${n>1?"s":""} ready`:""};
+  $("jSave").onclick=async()=>{const btn=$("jSave");btn.disabled=true;btn.textContent="Saving…";
+    const id=Date.now(),keys=[];
+    for(const f of ph.files){try{const bl=await shrink(f);const k=id+"-"+keys.length;await idb.put(k,bl);keys.push(k)}catch(e){toast("A photo couldn't be saved on this device.")}}
+    const j={id,date:$("jDate").value||today(),client:$("jClient").value.trim(),count:parseInt($("jCount").value)||0,stones:$("jStones").value.trim(),notes:$("jNotes").value.trim(),photos:keys};
+    (jobs[c.id]=jobs[c.id]||[]).unshift(j);jobs[c.id].sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+    visited.add(c.id);planned.delete(c.id);saveJobs();saveMine();buildClients();card();renderList();stats();toast("Job saved")}}
+function buildClients(){const m=new Map();Object.values(info).forEach(I=>{if(I.client)m.set(I.client.toLowerCase(),I.client)});Object.values(jobs).forEach(J=>J.forEach(j=>{if(j.client)m.set(j.client.toLowerCase(),j.client)}));
+  const list=[...m.entries()].sort((a,b)=>a[1].localeCompare(b[1]));if(st.client&&!m.has(st.client))st.client="";
+  const s=$("client");s.hidden=!list.length;s.innerHTML=`<option value="">All clients (${list.length})</option>`+list.map(([k,v])=>`<option value="${esc(k)}"${k===st.client?" selected":""}>${esc(v)}</option>`).join("");
+  $("clientList").innerHTML=list.map(([,v])=>`<option value="${esc(v)}">`).join("")}
 function pick(c,fly){sel=c;card();renderList();tab("details");
   if(fly)map.flyTo([c.la,c.lo],Math.max(map.getZoom(),13),{duration:.8});
   if(innerWidth<900&&!fly)document.querySelector("aside").scrollIntoView({behavior:"smooth"})}
 
 /* route */
 function toggleRoute(id){const i=route.indexOf(id);if(i>=0)route.splice(i,1);else{if(route.length>=24){toast("Routes max out at 24 stops.");return}route.push(id)}
-  saveRoute();toast(i>=0?"Removed from route":`Added to route (${route.length} stops)`);if(sel)card();renderList()}
+  saveRoute();toast(i>=0?"Removed from today's trip":`Added to today's trip (${route.length} stops)`);if(sel)card();renderList()}
 function saveRoute(){save("pv2Route",route);save("pv2Round",roundtrip);$("rn").textContent=route.length;routeInfo=null;drawRoute();if(document.querySelector('[data-tab="route"]').getAttribute("aria-selected")==="true")renderRoute()}
 function pts(){const p=[HOME,...route.map(id=>{const c=byId.get(id);return[c.la,c.lo]})];if(roundtrip&&route.length)p.push(HOME);return p}
 function estMiles(){const p=pts();let s=0;for(let i=1;i<p.length;i++)s+=hav(p[i-1],p[i]);return s*1.25}
@@ -1070,11 +1140,11 @@ function optimize(){if(route.length<3){toast("Add at least 3 stops to optimize."
     if(after+1e-6<before){seq=[...seq.slice(0,i),...seq.slice(i,j+1).reverse(),...seq.slice(j+1)];imp=true}}}
   route=seq.filter(x=>x!=="H");saveRoute();toast("Stops reordered for the shortest loop.")}
 async function roadRoute(){if(!route.length)return;
-  const p=pts(),u=`https://router.project-osrm.org/route/v1/driving/${p.map(x=>x[1].toFixed(5)+","+x[0].toFixed(5)).join(";")}?overview=full&geometries=geojson`;
+  const p=pts(),u=`https://router.project-osrm.org/route/v1/driving/${p.map(x=>x[1].toFixed(5)+","+x[0].toFixed(5)).join(";")}?overview=full&geometries=geojson&steps=true`;
   const ac=new AbortController(),t=setTimeout(()=>ac.abort(),10000);
   $("calc").textContent="Calculating…";
   try{const r=await fetch(u,{signal:ac.signal});const j=await r.json();if(j.code!=="Ok")throw 0;const R=j.routes[0];
-    routeInfo={miles:R.distance/1609.34,min:R.duration/60,geo:R.geometry.coordinates.map(q=>[q[1],q[0]]),legs:R.legs.map(l=>l.distance/1609.34)};drawRoute();renderRoute()}
+    routeInfo={miles:R.distance/1609.34,min:R.duration/60,geo:R.geometry.coordinates.map(q=>[q[1],q[0]]),legs:R.legs.map(l=>l.distance/1609.34),steps:R.legs.map(l=>(l.steps||[]).map(stepTxt))};drawRoute();renderRoute()}
   catch(e){toast("Road routing needs internet. Showing an estimate.");$("calc").textContent="Get road miles"}finally{clearTimeout(t)}}
 function drawRoute(){routeG.clearLayers();if(!route.length)return;
   const line=routeInfo?routeInfo.geo:pts();
@@ -1084,46 +1154,64 @@ function drawRoute(){routeG.clearLayers();if(!route.length)return;
 function gmaps(){const s=route.map(id=>byId.get(id)),dest=roundtrip?HOMEQ:`${s[s.length-1].la},${s[s.length-1].lo}`;
   const wps=(roundtrip?s:s.slice(0,-1)).slice(0,9).map(c=>`${c.la},${c.lo}`).join("|");
   return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(HOMEQ)}&destination=${encodeURIComponent(dest)}${wps?"&waypoints="+encodeURIComponent(wps):""}&travelmode=driving`}
+function stepTxt(x){const m=x.maneuver||{},t=m.type,mod=m.modifier||"",nm=x.name||x.ref||"",on=nm?` onto ${nm}`:"";
+  const a=t==="depart"?`Start out${nm?" on "+nm:""}`:t==="arrive"?"Arrive":(t==="roundabout"||t==="rotary")?`At the roundabout take exit ${m.exit||""}${on}`:t==="merge"?`Merge${on}`:t==="on ramp"?`Take the ramp${on}`:t==="off ramp"?`Take the exit${on}`:t==="fork"?`Keep ${mod}${on}`:(t==="continue"||t==="new name")?`Continue${mod&&mod!=="straight"?" "+mod:""}${on}`:mod==="straight"?`Continue straight${on}`:mod?`Turn ${mod}${on}`:`Continue${on}`;
+  return{t:a,mi:x.distance/1609.34}}
+function loadList(ids,label){ids=[...new Set(ids)].filter(id=>byId.has(id)).sort((a,b)=>byId.get(a).d-byId.get(b).d);
+  if(!ids.length){toast(`Nothing in ${label} yet.`);return}
+  const n=ids.length;route=ids.slice(0,24);saveRoute();renderList();
+  if(route.length>=3)optimize();toast(n>24?`Loaded the 24 closest of ${n}, in the shortest order.`:`Loaded ${route.length} stop${route.length>1?"s":""} from ${label}.`)}
 function renderRoute(){const b=$("routeBox");
-  if(!route.length){b.innerHTML=`<h2>Plan a route</h2><p class="meta">Tap <b>+</b> next to any cemetery, or use “Add to route” in its details. Stops show up here in order, starting from Perry.</p><p class="note">Tip: filter by distance first, then add the ones that look good.</p>`;return}
+  const np=[...planned].filter(id=>byId.has(id)).length,nf=[...favs].filter(id=>byId.has(id)).length;
+  const loaders=`<div class="row"><button class="btn${route.length?"":" pri"}" id="ldGo">${route.length?"Replace with":"Load"} my Going list (${np})</button><button class="btn" id="ldFav">★ Favorites (${nf})</button></div>`;
+  const bindL=()=>{$("ldGo").onclick=()=>loadList([...planned],"your Going list");$("ldFav").onclick=()=>loadList([...favs],"favorites")};
+  if(!route.length){b.innerHTML=`<h2>Today</h2><p class="meta">One tap turns your Going list into a loop from Perry and back, in the shortest order. You can also tap <b>+</b> next to any cemetery to add it by hand.</p>${loaders}`;bindL();return}
   const est=estMiles(),mi=routeInfo?routeInfo.miles:est,mins=routeInfo?routeInfo.min:est/40*60;
-  const hm=m=>m>=60?`${Math.floor(m/60)}h ${Math.round(m%60)}m`:`${Math.round(m)}m`;
-  const capped=(roundtrip?route.length:route.length-1)>9;
-  b.innerHTML=`<h2>Today's route</h2>
+  b.innerHTML=`<h2>Today's trip</h2>
   <div class="big"><div><b>${mi.toFixed(1)}</b>${routeInfo?"road miles":"miles, est."}</div><div><b>${hm(mins)}</b>${routeInfo?"drive time":"drive, est."}</div><div><b>${route.length}</b>stops</div></div>
-  <p class="note">${routeInfo?"Road miles from OSRM routing.":"Estimate: straight line × 1.25 at 40 mph. Get road miles for the real number."}</p>
-  <div class="row" style="margin-bottom:12px"><button class="btn pri" id="calc">${routeInfo?"Refresh road miles":"Get road miles"}</button><button class="btn" id="opt">Optimize order</button><button class="chip" id="rt" aria-pressed="${roundtrip}">Return to Perry</button></div>
+  <p class="note">${routeInfo?"Road miles and directions from OSRM.":"Estimate: straight line × 1.25 at 40 mph. Get road miles for the real number and turn-by-turn directions."}</p>
+  <div class="row" style="margin-bottom:12px"><button class="btn pri" id="calc">${routeInfo?"Refresh road miles":"Get road miles"}</button><button class="btn" id="opt">Shortest order</button><button class="btn" id="prt">🖨 Print trip sheet</button></div>
   <ol class="stops"><li><span class="num h">P</span><span class="t">Perry, NY 14530<small>Start</small></span><span></span></li>
-  ${route.map((id,i)=>{const c=byId.get(id),leg=routeInfo?.legs?.[i];return `<li><span class="num">${i+1}</span><span class="t">${esc(c.n)}<small>${esc(c.co)} Co. · ${leg!=null?leg.toFixed(1)+" mi leg":c.d.toFixed(1)+" mi from Perry"}${visited.has(c.id)?" · visited":""}</small></span><span class="ctl"><button class="ic" data-up="${i}" ${i?"":"disabled"} aria-label="Move up">↑</button><button class="ic" data-dn="${i}" ${i<route.length-1?"":"disabled"} aria-label="Move down">↓</button><button class="ic" data-rm="${i}" aria-label="Remove">✕</button></span></li>`}).join("")}
-  ${roundtrip?`<li><span class="num h">P</span><span class="t">Back to Perry<small>${routeInfo?.legs?routeInfo.legs[routeInfo.legs.length-1].toFixed(1)+" mi leg":"Finish"}</small></span><span></span></li>`:""}</ol>
+  ${route.map((id,i)=>{const c=byId.get(id),leg=routeInfo?.legs?.[i],cl=info[id]?.client;return `<li><span class="num">${i+1}</span><span class="t">${favs.has(id)?'<span class="star">★</span> ':""}${esc(c.n)}<small>${c.co?esc(c.co)+" Co. · ":""}${leg!=null?leg.toFixed(1)+" mi leg":c.d.toFixed(1)+" mi from Perry"}${cl?" · "+esc(cl):""}${visited.has(c.id)?" · visited":""}</small></span><span class="ctl"><button class="ic" data-up="${i}" ${i?"":"disabled"} aria-label="Move up">↑</button><button class="ic" data-dn="${i}" ${i<route.length-1?"":"disabled"} aria-label="Move down">↓</button><button class="ic" data-rm="${i}" aria-label="Remove">✕</button></span></li>`}).join("")}
+  <li><span class="num h">P</span><span class="t">Back to Perry<small>${routeInfo?.legs?routeInfo.legs[routeInfo.legs.length-1].toFixed(1)+" mi leg":"Finish"}</small></span><span></span></li></ol>
   <div class="links" style="margin-top:14px"><a class="btn pri" href="${gmaps()}" target="_blank" rel="noopener">Open in Google Maps</a><button class="btn" id="fitR">Show on map</button><button class="btn" id="clr">Clear</button></div>
-  ${capped?`<p class="note">Google Maps links carry 9 stops max. The first 9 are sent.</p>`:""}
-  <p class="lab" style="margin-top:8px">Done driving it?</p>
-  <div class="row"><input type="date" id="tDate" value="${today()}" style="width:auto;flex:1"><input type="number" id="tMiles" value="${mi.toFixed(1)}" step="0.1" min="0" aria-label="Miles driven" style="width:110px"><button class="btn gold" id="logT">Log trip</button></div>
-  <p class="note" style="margin-top:6px">Logging marks every stop as visited and adds the miles to your Mileage tab. Edit the miles first if you took a detour.</p>`;
-  $("calc").onclick=roadRoute;$("opt").onclick=optimize;$("rt").onclick=()=>{roundtrip=!roundtrip;saveRoute()};
+  ${route.length>9?`<p class="note">Google Maps links carry 9 stops max. The first 9 are sent. The printed sheet has them all.</p>`:""}
+  <p class="lab" style="margin-top:8px">Back home?</p>
+  <div class="row"><input type="date" id="tDate" value="${today()}" style="width:auto;flex:1" aria-label="Trip date"><button class="btn gold" id="logT">Mark trip done</button></div>
+  <p class="note" style="margin-top:6px">Marks every stop visited and counts toward Most visited. Log stones and photos from each cemetery's Details tab.</p>
+  <div style="margin-top:14px;border-top:1px solid var(--line);padding-top:12px">${loaders}</div>
+  <p style="margin-top:10px"><button class="linkb" id="dlJobs">Download job log CSV</button></p>`;
+  bindL();
+  $("calc").onclick=roadRoute;$("opt").onclick=optimize;$("prt").onclick=printSheet;
   $("fitR").onclick=()=>{const l=L.polyline(routeInfo?routeInfo.geo:pts());map.fitBounds(l.getBounds(),{padding:[30,30]})};
-  $("clr").onclick=()=>{route=[];saveRoute();renderList();toast("Route cleared")};
+  $("clr").onclick=()=>{route=[];saveRoute();renderList();toast("Trip cleared")};
   b.querySelectorAll("[data-up]").forEach(x=>x.onclick=()=>{const i=+x.dataset.up;[route[i-1],route[i]]=[route[i],route[i-1]];saveRoute()});
   b.querySelectorAll("[data-dn]").forEach(x=>x.onclick=()=>{const i=+x.dataset.dn;[route[i+1],route[i]]=[route[i],route[i+1]];saveRoute()});
   b.querySelectorAll("[data-rm]").forEach(x=>x.onclick=()=>{route.splice(+x.dataset.rm,1);saveRoute();renderList()});
-  $("logT").onclick=()=>{const m=parseFloat($("tMiles").value);if(!(m>=0)){toast("Enter the miles driven.");return}
-    trips.unshift({id:Date.now(),date:$("tDate").value||today(),miles:+m.toFixed(1),min:Math.round(mins),stops:route.map(id=>byId.get(id).n),ids:[...route]});
-    route.forEach(id=>{visited.add(id);planned.delete(id)});saveMine();save("pv2Log",trips);route=[];saveRoute();renderList();stats();tab("log");toast("Trip logged. Nice work.")}}
+  $("dlJobs").onclick=dlJobs;
+  $("logT").onclick=()=>{trips.unshift({id:Date.now(),date:$("tDate").value||today(),miles:+mi.toFixed(1),min:Math.round(mins),stops:route.map(id=>byId.get(id).n),ids:[...route]});
+    route.forEach(id=>{visited.add(id);planned.delete(id)});saveMine();save("pv2Log",trips);route=[];saveRoute();renderList();stats();toast("Trip marked done. Nice work.")}}
+function dlJobs(){const rows=[["Date","Cemetery","County","State","Client","Stones (count)","Stones done","Notes","Photos"]];
+  Object.entries(jobs).forEach(([id,J])=>{const c=byId.get(id);J.forEach(j=>rows.push([j.date,c?c.n:id,c?.co||"",c?.s||"",j.client,j.count||"",j.stones,j.notes,(j.photos||[]).length]))});
+  if(rows.length<2){toast("No jobs logged yet.");return}
+  rows.splice(1,rows.length,...rows.slice(1).sort((a,b)=>String(b[0]).localeCompare(String(a[0]))));download("job_log.csv",rows)}
+async function printSheet(){if(!route.length)return;
+  if(!routeInfo&&navigator.onLine){await roadRoute()}
+  const est=estMiles(),mi=routeInfo?routeInfo.miles:est,mins=routeInfo?routeInfo.min:est/40*60,stops=route.map(id=>byId.get(id));
+  const dirs=i=>routeInfo?.steps?.[i]?.length?`<p class="lbl2">Directions</p><ol class="dir">${routeInfo.steps[i].map(x=>`<li>${esc(x.t)}${x.mi>=.05?` <span>(${x.mi.toFixed(1)} mi)</span>`:""}</li>`).join("")}</ol>`:"";
+  const d=new Date().toLocaleDateString([], {weekday:"long",month:"long",day:"numeric",year:"numeric"});
+  $("print").innerHTML=`<h1>Trip sheet · ${esc(d)}</h1>
+  <p class="ps">Start and end: Perry, NY 14530 · ${stops.length} stops · ${mi.toFixed(0)} ${routeInfo?"road miles":"miles (estimate)"} · about ${hm(mins)} driving</p>
+  ${routeInfo?"":`<p class="ps"><i>Turn-by-turn directions aren't on this sheet. Tap “Get road miles” while you have signal, then print again.</i></p>`}
+  ${stops.map((c,i)=>{const I=info[c.id]||{},J=(jobs[c.id]||[]).slice(0,3);return `<section class="pst"><h2>${i+1}. ${esc(c.n)}</h2>
+    <p>${c.co?esc(c.co)+" County, ":""}${esc(stName(c.s))} · GPS ${c.la.toFixed(5)}, ${c.lo.toFixed(5)} · ${routeInfo?.legs?.[i]!=null?routeInfo.legs[i].toFixed(1)+" mi from last stop":c.d.toFixed(1)+" mi from Perry"}</p>
+    ${I.client||I.note?`<p>${I.client?`<b>Client:</b> ${esc(I.client)} &nbsp; `:""}${I.note?`<b>Notes:</b> ${esc(I.note)}`:""}</p>`:""}
+    ${J.length?`<p><b>Past work:</b> ${J.map(j=>esc([j.date,j.client,j.count?j.count+" stones":"",j.stones].filter(Boolean).join(" – "))).join(" · ")}</p>`:""}
+    ${dirs(i)}
+    <p class="lbl2">☐ Done &nbsp;&nbsp; Client / stones done today</p><div class="wln"></div><div class="wln"></div></section>`}).join("")}
+  <section class="pst"><h2>Back to Perry</h2>${dirs(stops.length)}</section>`;
+  window.print()}
 
-/* mileage log */
-function renderLog(){const b=$("logBox"),tot=trips.reduce((s,t)=>s+(+t.miles||0),0),stops=trips.reduce((s,t)=>s+(t.stops?.length||0),0);
-  const yr=new Date().getFullYear(),ytd=trips.filter(t=>String(t.date).startsWith(yr)).reduce((s,t)=>s+(+t.miles||0),0);
-  b.innerHTML=`<h2>Mileage log</h2>
-  <div class="big"><div><b>${tot.toFixed(1)}</b>total miles</div><div><b>${ytd.toFixed(1)}</b>miles in ${yr}</div><div><b>${trips.length}</b>trips · ${stops} stops</div></div>
-  <p class="lab">Add miles by hand</p>
-  <div class="row" style="margin-bottom:6px"><input type="date" id="mDate" value="${today()}" style="width:auto;flex:1"><input type="number" id="mMiles" placeholder="Miles" step="0.1" min="0" aria-label="Miles" style="width:110px"></div>
-  <div class="row" style="margin-bottom:16px"><input type="text" id="mNote" placeholder="Where did you go?" aria-label="Note" style="flex:1"><button class="btn pri" id="mAdd">Add</button></div>
-  ${trips.length?`<table><thead><tr><th>Date</th><th>Trip</th><th class="r">Miles</th><th></th></tr></thead><tbody>${trips.map(t=>`<tr><td style="white-space:nowrap">${esc(t.date)}</td><td>${t.stops?.length?esc(t.stops.join(", ")):esc(t.note||"")}</td><td class="r">${(+t.miles).toFixed(1)}</td><td class="r"><button class="ic" data-del="${t.id}" aria-label="Delete trip">✕</button></td></tr>`).join("")}</tbody></table>
-  <div class="links" style="margin-top:14px"><button class="btn" id="dlLog">Download log CSV</button></div>`:`<p class="empty">No trips yet. Build a route and log it, or add miles above.</p>`}`;
-  $("mAdd").onclick=()=>{const m=parseFloat($("mMiles").value);if(!(m>0)){toast("Enter the miles.");return}trips.unshift({id:Date.now(),date:$("mDate").value||today(),miles:+m.toFixed(1),note:$("mNote").value.trim()||"Manual entry"});trips.sort((a,b)=>String(b.date).localeCompare(String(a.date)));save("pv2Log",trips);renderLog();stats()};
-  b.querySelectorAll("[data-del]").forEach(x=>x.onclick=()=>{const i=trips.findIndex(t=>String(t.id)===x.dataset.del);const gone=trips.splice(i,1)[0];save("pv2Log",trips);renderLog();stats();toast(`Deleted ${gone.date} trip`)});
-  const d=$("dlLog");if(d)d.onclick=()=>download("perry_mileage_log.csv",[["Date","Miles","Stops / note"],...trips.map(t=>[t.date,t.miles,t.stops?.length?t.stops.join("; "):t.note||""])])}
 function download(name,rows){const csv=rows.map(r=>r.map(v=>{v=String(v??"");return /[",\n]/.test(v)?`"${v.replace(/"/g,'""')}"`:v}).join(",")).join("\n");
   const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
 
@@ -1135,16 +1223,17 @@ $("r").addEventListener("input",e=>{st.r=+e.target.value;$("rv").textContent=st.
 ["NY","PA"].forEach(s=>$("f"+s).onclick=e=>{st[s]=!st[s];PREF[s]=st[s];savePrefs();e.currentTarget.setAttribute("aria-pressed",st[s]);limit=LIM;renderList()});
 document.querySelectorAll("[data-sz]").forEach(b=>b.onclick=()=>{st.size=b.dataset.sz;document.querySelectorAll("[data-sz]").forEach(x=>x.setAttribute("aria-pressed",x===b));limit=LIM;renderList()});
 $("show").onchange=e=>{st.show=e.target.value;limit=LIM;$("clrMine").hidden=!["mine","plan"].includes(st.show);renderList()};
+$("client").onchange=e=>{st.client=e.target.value;limit=LIM;renderList()};
 $("county").onchange=e=>{st.county=e.target.value;limit=LIM;renderList()};
-$("dl").onclick=()=>download("cemetery_tracker.csv",[["Name","County","State","Status","Date","Notes","Miles from Perry","Direction","Est. size","Latitude","Longitude","USGS map"],...filtered().map(c=>[c.n,c.co,c.s,visited.has(c.id)?"visited":planned.has(c.id)?"going":"",info[c.id]?.date||"",info[c.id]?.note||"",c.d,dir(c.b),SZ[c.z]||"",c.la,c.lo,c.quad])]);
+$("dl").onclick=()=>download("cemetery_tracker.csv",[["Name","County","State","Status","Client","Favorite","Visits","Jobs","Date","Notes","Miles from Perry","Direction","Est. size","Latitude","Longitude","USGS map"],...filtered().map(c=>[c.n,c.co,c.s,visited.has(c.id)?"visited":planned.has(c.id)?"going":"",info[c.id]?.client||"",favs.has(c.id)?"yes":"",VC.get(c.id)||"",(jobs[c.id]||[]).length||"",info[c.id]?.date||"",info[c.id]?.note||"",c.d,dir(c.b),SZ[c.z]||"",c.la,c.lo,c.quad])]);
 $("up").onclick=()=>$("file").click();
 $("file").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{importCSV(String(r.result))}catch(err){toast("Couldn't read that file.")}};r.readAsText(f);e.target.value=""};
 $("clrMine").onclick=()=>{if(!confirm("Clear your list? This removes every “Going” mark, your notes, and places added from a CSV. Visited marks and the mileage log stay."))return;
   planned.clear();info={};const ids=new Set(custom.map(c=>c.id));custom=[];for(let i=C.length-1;i>=0;i--)if(ids.has(C[i].id)){byId.delete(C[i].id);C.splice(i,1)}
-  route=route.filter(id=>byId.has(id));if(sel&&ids.has(sel.id))sel=null;saveRoute();saveMine();buildCounties();$("imp").hidden=true;card();renderList();stats();toast("List cleared")};
+  route=route.filter(id=>byId.has(id));if(sel&&ids.has(sel.id))sel=null;saveRoute();saveMine();buildCounties();buildClients();$("imp").hidden=true;card();renderList();stats();toast("List cleared")};
 
 /* CSV import */
-function saveMine(){save("ctPlanned",[...planned]);save("pv2Visited",[...visited]);save("ctInfo",info);save("ctCustom",custom)}
+function saveMine(){save("ctFav",[...favs]);save("ctPlanned",[...planned]);save("pv2Visited",[...visited]);save("ctInfo",info);save("ctCustom",custom)}
 function parseCSV(t){t=t.replace(/^\uFEFF/,"");const rows=[];let row=[],f="",q=false;
   for(let i=0;i<t.length;i++){const ch=t[i];
     if(q){if(ch==='"'){if(t[i+1]==='"'){f+='"';i++}else q=false}else f+=ch}
@@ -1163,9 +1252,9 @@ function importCSV(text){
   const H=rows[0].map(h=>h.trim().toLowerCase().replace(/[^a-z]/g,""));
   const col=(...n)=>H.findIndex(h=>n.includes(h));
   const iN=col("name","cemetery","cemeteryname","cemeteries","site","place","location"),iCo=col("county","countyname"),iSt=col("state","st"),
-    iLa=col("latitude","lat"),iLo=col("longitude","lon","lng","long"),iS=col("status","visited","stage","progress"),iD=col("date","visitdate","scheduled","when","visited on","visitedon"),iNo=col("notes","note","comments","comment","description","details");
+    iLa=col("latitude","lat"),iLo=col("longitude","lon","lng","long"),iS=col("status","visited","stage","progress"),iD=col("date","visitdate","scheduled","when","visited on","visitedon"),iNo=col("notes","note","comments","comment","description","details"),iCl=col("client","customer","clientname","customername","family","job","jobname","for"),iF=col("favorite","favourite","fav","star","starred");
   if(iN<0){showImp(`<h3>Couldn't import</h3><p>The first row needs a column called <b>Name</b> (or Cemetery). County, State, Latitude, Longitude, Status, Date and Notes are optional.</p>`);return}
-  const used=new Set([iN,iCo,iSt,iLa,iLo,iS,iD,iNo]);
+  const used=new Set([iN,iCo,iSt,iLa,iLo,iS,iD,iNo,iCl,iF]);
   const idx=new Map();C.forEach(c=>{const k=nkey(c.n);if(!idx.has(k))idx.set(k,[]);idx.get(k).push(c)});
   let matched=0,added=0,nv=0,np=0;const miss=[],check=[];
   rows.slice(1).forEach(r=>{const g=i=>i>=0?String(r[i]??"").trim():"";
@@ -1185,8 +1274,9 @@ function importCSV(text){
     const isV=!/^(no|n|false|not visited|todo|to do|planned|going|scheduled)$/.test(sv)&&/(visit|done|complete|etched|finish|^yes$|^y$|^x$|^true$|✓)/.test(sv);
     if(isV){visited.add(c.id);planned.delete(c.id);nv++}else{if(!visited.has(c.id)||/going|plan|sched|again/.test(sv)){planned.add(c.id);np++}}
     const extra={};H.forEach((h,i)=>{if(!used.has(i)&&g(i))extra[rows[0][i].trim()]=g(i)});
-    const old=info[c.id]||{};info[c.id]={note:g(iNo)||old.note||"",date:g(iD)||old.date||"",extra:{...(old.extra||{}),...extra}}});
-  saveMine();buildCounties();
+    const old=info[c.id]||{};if(/^(y|yes|true|x|1|★|fav|favorite|favourite)$/i.test(g(iF)))favs.add(c.id);
+    info[c.id]={client:g(iCl)||old.client||"",note:g(iNo)||old.note||"",date:g(iD)||old.date||"",extra:{...(old.extra||{}),...extra}}});
+  saveMine();buildCounties();buildClients();
   st.show="mine";$("show").value="mine";$("clrMine").hidden=false;limit=LIM;
   renderList();stats();
   const mine=C.filter(c=>planned.has(c.id)||visited.has(c.id));
@@ -1200,7 +1290,7 @@ new MutationObserver(restyle).observe(document.documentElement,{attributes:true,
 
 function buildCounties(){const cs=[...new Set(C.filter(c=>c.co).map(c=>c.s+"|"+c.co))].sort((a,b)=>a.split("|")[1].localeCompare(b.split("|")[1]));
   $("county").innerHTML=`<option value="">All counties (${cs.length})</option>`+cs.map(v=>{const[s,co]=v.split("|");return `<option value="${esc(v)}"${v===st.county?" selected":""}>${esc(co)} County, ${s} (${C.filter(c=>c.s+"|"+c.co===v).length})</option>`}).join("")}
-buildCounties();
+buildCounties();buildClients();
 $("fNY").setAttribute("aria-pressed",st.NY);$("fPA").setAttribute("aria-pressed",st.PA);
 setBase(PREF.base);toggle("tRoads",PREF.roads&&PREF.base==="clean");toggle("tRings",PREF.rings);toggle("tTowns",PREF.towns);toggle("tLegend",PREF.legend);
 const hh=()=>{document.documentElement.style.setProperty("--hh",document.querySelector(".top").offsetHeight+"px");map.invalidateSize()};
